@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  p Search for an asteroid on New years day by year
+
+  h3 Enter a year:
+  form(action="/" method="get")
+    input(name="year" type="test")
+    input(type="submit")
+
+  if asteroids
+    ul
+      each a in asteroids
+        li #{a.id} #{a.name}
