@@ -1,5 +1,7 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
+
+let filterDangerous = false;
 
 const asteroidService = require('../lib/services/asteroidService');
 
@@ -7,14 +9,20 @@ const asteroidService = require('../lib/services/asteroidService');
 // given year
 router.get('/', async function(req, res) {
 
+  filterDangerous = (req.query.dangerous && req.query.dangerous === "true");
+ 
   // If we get a year passed in as a query param
   if(req.query.year) {
-    console.log(req.query.year);
 
     // Get the asteroid data for that year
-    let asteroids = await asteroidService.getAstroidsByDate(req.query.year + "-01-01");
+    let asteroids = await asteroidService.getAstroidsByDate(
+      req.query.year + "-01-01", 
+      req.query.year + "-01-07", 
+      filterDangerous
+    );
     // Show it to the user
-  
+    console.log(asteroids);
+
     res.render('index', { 
       title: "Asteroids for " + req.query.year,
       asteroids: asteroids 
@@ -25,7 +33,6 @@ router.get('/', async function(req, res) {
       asteroids: [] 
     });
   }
-
 
 });
 
